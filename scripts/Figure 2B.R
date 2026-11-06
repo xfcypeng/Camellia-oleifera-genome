@@ -1,21 +1,21 @@
 
-# °²×°ËùĞè°ü£¨½öĞèÔËĞĞÒ»´Î£©
+# å®‰è£…æ‰€éœ€åŒ…ï¼ˆä»…éœ€è¿è¡Œä¸€æ¬¡ï¼‰
 # install.packages(c("ggplot2", "dplyr", "readr"))
 
 library(ggplot2)
 library(dplyr)
 library(readr)
 
-# ¶ÁÈ¡Êı¾İ£ºCSV ÎÄ¼şĞë°üº¬ group ºÍ time Á½ÁĞ
-# group Ê¾Àı£ºWT¡¢OE1¡¢OE5¡¢OE12
-# time£ºÃ¿ÖêÖ²ÎïµÄ¿ª»¨Ê±¼ä£¨Ìì£©
+# è¯»å–æ•°æ®ï¼šCSV æ–‡ä»¶é¡»åŒ…å« group å’Œ time ä¸¤åˆ—
+# group ç¤ºä¾‹ï¼šWTã€OE1ã€OE5ã€OE12
+# timeï¼šæ¯æ ªæ¤ç‰©çš„å¼€èŠ±æ—¶é—´ï¼ˆå¤©ï¼‰
 data <- read_csv("flowering_time.csv", show_col_types = FALSE)
 
-# ÉèÖÃ×é±ğË³Ğò£¬²¢¼ì²éÊı¾İÁĞ
+# è®¾ç½®ç»„åˆ«é¡ºåºï¼Œå¹¶æ£€æŸ¥æ•°æ®åˆ—
 group_order <- c("WT", "OE1", "OE5", "OE12")
 
 if (!all(c("group", "time") %in% names(data))) {
-  stop("Êı¾İÎÄ¼ş±ØĞë°üº¬ group ºÍ time Á½ÁĞ¡£")
+  stop("æ•°æ®æ–‡ä»¶å¿…é¡»åŒ…å« group å’Œ time ä¸¤åˆ—ã€‚")
 }
 
 data <- data %>%
@@ -25,7 +25,7 @@ data <- data %>%
   ) %>%
   filter(!is.na(group), !is.na(time))
 
-# ¼ÆËã¸÷×é¾ùÖµºÍ±ê×¼Îó£¨SE£©
+# è®¡ç®—å„ç»„å‡å€¼å’Œæ ‡å‡†è¯¯ï¼ˆSEï¼‰
 summary_data <- data %>%
   group_by(group) %>%
   summarise(
@@ -34,19 +34,19 @@ summary_data <- data %>%
     .groups = "drop"
   )
 
-# °´Ê¾ÀıÍ¼Ìí¼ÓÏÔÖøĞÔĞÇºÅ£»ÈçĞèµ÷Õû£¬¿ÉĞŞ¸Ä´Ë´¦
+# æŒ‰ç¤ºä¾‹å›¾æ·»åŠ æ˜¾è‘—æ€§æ˜Ÿå·ï¼›å¦‚éœ€è°ƒæ•´ï¼Œå¯ä¿®æ”¹æ­¤å¤„
 stars <- data.frame(
   group = factor(c("OE1", "OE5", "OE12"), levels = group_order),
   label = "*"
 )
 
-# ÎªĞÇºÅÉèÖÃ¸ß¶È£¬Áô³öÎó²îÏßºÍÊı¾İµãÉÏ·½µÄ¿Õ¼ä
+# ä¸ºæ˜Ÿå·è®¾ç½®é«˜åº¦ï¼Œç•™å‡ºè¯¯å·®çº¿å’Œæ•°æ®ç‚¹ä¸Šæ–¹çš„ç©ºé—´
 star_positions <- summary_data %>%
   filter(group %in% stars$group) %>%
   left_join(stars, by = "group") %>%
   mutate(y = mean + se + 3)
 
-# »æÍ¼
+# ç»˜å›¾
 p <- ggplot(summary_data, aes(x = group, y = mean, fill = group)) +
   geom_col(width = 0.55, color = NA) +
   geom_errorbar(
@@ -95,7 +95,7 @@ p <- ggplot(summary_data, aes(x = group, y = mean, fill = group)) +
 
 print(p)
 
-# ±£´æÍ¼Æ¬
+# ä¿å­˜å›¾ç‰‡
 ggsave(
   "flowering_time_plot.png",
   plot = p,
